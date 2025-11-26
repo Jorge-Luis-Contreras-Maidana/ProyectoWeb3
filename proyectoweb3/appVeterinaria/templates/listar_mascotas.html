@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% comment %} usuario: {{ user.username }} {% endcomment %}
+    <h1>LISTADO MASCOTAS</h1>
+    <ul>
+        {% for mascota in mascotas %}
+            <li>
+                {{ mascota.id_mascota }} - {{ mascota.nombre }} - {{ mascota.especie }} - {{ mascota.raza }} - {{ mascota.sexo }} - {{ mascota.fecha_nacimiento }} - Dueño ID: {{ mascota.id_dueno.id_dueno }}
+                <a href=" {% url 'eliminar_mascota' mascota.id_mascota %}">ELIMINAR</a> | 
+                <a href="{% url 'actualizar_mascota' mascota.id_mascota %}">MODIFICAR</a> 
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'crear_mascota' %}">NUEVA MASCOTA</a> |
+    <a href="{% url 'listar_duenos' %}">VER DUENOS</a> |
+    <a href="{% url 'listar_veterinarios' %}">VER VETERINARIOS</a> |
+    <a href="{% url 'listar_vacunas' %}">VER VACUNAS</a> |
+    <a href="{% url 'listar_citas' %}">VER CITAS</a> |
+    <a href="{% url 'listar_historial' %}">VER HISTORIAL</a>
+    
+{% endblock %}

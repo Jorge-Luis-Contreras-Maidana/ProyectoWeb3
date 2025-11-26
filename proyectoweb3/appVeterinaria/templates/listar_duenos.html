@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+        {% comment %} usuario: {{ user.username }} {% endcomment %}
+        <h1>LISTADO DUENOS</h1>
+        <ul>
+            {% for dueno in duenos %}
+                <li>
+                    {{ dueno.id_dueno }} - {{ dueno.nombre }} - {{ dueno.ci }} - {{ dueno.telefono }} - {{ dueno.direccion }} - {{ cliente.email }}
+                    <a href=" {% url 'eliminar_dueno' dueno.id_dueno %}">ELIMINAR</a> | 
+                    <a href="{% url 'actualizar_dueno' dueno.id_dueno %}">MODIFICAR</a> 
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'crear_dueno' %}">NUEVO DUENO</a> |
+        <a href="{% url 'listar_mascotas' %}">VER MASCOTAS</a> |
+        <a href="{% url 'listar_veterinarios' %}">VER VETERINARIOS</a> |
+        <a href="{% url 'listar_vacunas' %}">VER VACUNAS</a> |
+        <a href="{% url 'listar_citas' %}">VER CITAS</a> |
+        <a href="{% url 'listar_historial' %}">VER HISTORIAL</a>
+    
+{% endblock %}
