@@ -82,7 +82,7 @@ class Cita(models.Model):
     estado = models.CharField(max_length=10, choices=estado_choices)
 
     def __str__(self):
-        return f"Cita {self.id_cita} - {self.mascota.nombre} - {self.fecha.strftime('%Y-%m-%d %H:%M')}"
+        return f"Cita {self.id_cita} - {self.id_mascota} - {self.fecha.strftime('%Y-%m-%d %H:%M')}"
 
     class Meta:
         managed = False
