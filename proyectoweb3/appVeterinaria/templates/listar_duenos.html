@@ -6,16 +6,49 @@
 =======
         {% comment %} usuario: {{ user.username }} {% endcomment %}
 >>>>>>> 716d40a775a9e92884cafec15d4b0b775f4beaef
+        <!--agregando estilos -->
         <h1>LISTADO DUEÑOS</h1>
-        <ul>
+            <div class="row g-0 my-0 bg-dark text-white fw-bold text-uppercase">
+                        <div class="col-sm px-0 py-2 border-end text-center">ID DUEÑO</div>
+                        <div class="col-sm px-0 py-2 border-end text-center">NOMBRE</div>
+                        <div class="col-sm px-0 py-2 border-end text-center">CI</div>
+                        <div class="col-sm px-0 py-2 border-end text-center">TELÉFONO</div>
+                        <div class="col-sm px-0 py-2 border-end text-center">DIRECCIÓN</div>
+                        <div class="col-sm px-0 py-2 border-end text-center"></div>
+                        <div class="col-sm px-0 py-2 text-center"></div>
+            </div>
             {% for dueno in duenos %}
-                <li>
-                    {{ dueno.id_dueno }} - {{ dueno.nombre }} - {{ dueno.ci }} - {{ dueno.telefono }} - {{ dueno.direccion }} - {{ cliente.email }}
-                    <a href=" {% url 'eliminar_dueno' dueno.id_dueno %}">ELIMINAR</a> | 
-                    <a href="{% url 'actualizar_dueno' dueno.id_dueno %}">MODIFICAR</a> 
-                </li>
+                <div class="container">
+                    <div class="row g-0 my-0 ">
+                        <div class="col-sm px-0 py-2 border-3 border-end text-center">
+                            {{ dueno.id_dueno }}
+                        </div>
+                        <div class="col-sm px-0 py-2 border-3 border-end text-center">
+                            {{ dueno.nombre }}
+                        </div>
+                        <div class="col-sm px-0 py-2 border-3 border-end text-center">
+                            {{ dueno.ci }}
+                        </div>
+                        <div class="col-sm px-0 py-2 border-3 border-end text-center">
+                            {{ dueno.telefono }}
+                        </div>
+                        <div class="col-sm px-0 py-2 border-3 border-end text-center">
+                            {{ dueno.direccion }}
+                        </div>
+                        <div class="col-sm px-0 py-2 border-3 border-end text-center">
+                            <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                                <a href=" {% url 'eliminar_dueno' dueno.id_dueno %}">ELIMINAR</a>
+                            </span>
+                        </div>
+                        <div class="col-sm px-0 py-2 text-center">
+                            <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                                <a href="{% url 'actualizar_dueno' dueno.id_dueno %}">MODIFICAR</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
-        </ul>
+        
         <a href="{% url 'crear_dueno' %}">NUEVO DUENO</a> |
     
 {% endblock %}
