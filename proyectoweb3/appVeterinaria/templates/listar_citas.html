@@ -2,7 +2,14 @@
 
 {% block content %}
     {% comment %} usuario: {{ user.username }} {% endcomment %}
-    <h1>LISTADO CITAS</h1>
+    <div class="d-flex justify-content-between align-items-center">
+        <h1>LISTADO CITAS</h1>
+        <div>
+            <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                <a href="{% url 'crear_cita' %}">NUEVO REGISTRO</a> 
+            </span>
+        </div>
+    </div>
     <ul>
         {% for cita in citas %}
             <li>
