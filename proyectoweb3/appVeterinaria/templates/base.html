@@ -15,6 +15,9 @@
     {% block navigation %}
     
         <nav>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1>Sistema de Gestión Veterinaria</h1>
+                    </div>
                     <a href="{% url 'listar_duenos' %}">VER DUENOS</a> |
                     <a href="{% url 'listar_mascotas' %}">VER MASCOTAS</a> |
                     <a href="{% url 'listar_veterinarios' %}">VER VETERINARIOS</a> |
