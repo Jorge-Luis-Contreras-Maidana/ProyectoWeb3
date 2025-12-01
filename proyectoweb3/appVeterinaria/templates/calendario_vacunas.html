@@ -6,11 +6,11 @@
     <!-- Botones de filtro -->
     <div style="margin-bottom: 20px;">
         {% if mostrar_proximas %}
-            <a href="{% url 'calendario_vacunas' %}" >📋 VER TODAS</a>
-            <span >💉 PRÓXIMAS VACUNAS (Activo)</span>
+            <a href="{% url 'calendario_vacunas' %}" style="padding: 10px 20px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 5px; margin-right: 10px;">📋 VER TODAS</a>
+            <span style="padding: 10px 20px; background-color: #28a745; color: white; border-radius: 5px;">💉 PRÓXIMAS VACUNAS (Activo)</span>
         {% else %}
-            <a href="{% url 'calendario_vacunas' %}?proximas=1" >💉 VER SOLO PRÓXIMAS</a>
-            <span >📋 VER TODAS (Activo)</span>
+            <a href="{% url 'calendario_vacunas' %}?proximas=1" style="padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; margin-right: 10px;">💉 VER SOLO PRÓXIMAS</a>
+            <span style="padding: 10px 20px; background-color: #6c757d; color: white; border-radius: 5px;">📋 VER TODAS (Activo)</span>
         {% endif %}
     </div>
     
@@ -56,13 +56,19 @@
                             {% endif %}
                         </div>
                         <div style="margin-left: 20px;">
-                            <a href="{% url 'actualizar_historial' vacuna.id_vacunacion %}" >
-                                ✏️ MODIFICAR
-                            </a>
-                            <a href="{% url 'eliminar_historial' vacuna.id_vacunacion %}" 
-                            onclick="return confirm('¿Está seguro de eliminar este registro?');">
-                                🗑️ ELIMINAR
-                            </a>
+                            {% if user.is_superuser or user.is_staff %}
+                                <a href="{% url 'actualizar_historial' vacuna.id_vacunacion %}" 
+                                   style="display: inline-block; padding: 8px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px; margin-bottom: 5px;">
+                                    ✏️ MODIFICAR
+                                </a>
+                            {% endif %}
+                            {% if user.is_superuser %}
+                                <a href="{% url 'eliminar_historial' vacuna.id_vacunacion %}" 
+                                   style="display: inline-block; padding: 8px 15px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 4px;"
+                                   onclick="return confirm('¿Está seguro de eliminar este registro?');">
+                                    🗑️ ELIMINAR
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -81,7 +87,9 @@
     {% endif %}
     
     <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #ddd;">
-        <a href="{% url 'crear_historial' %}" >➕ NUEVA VACUNACIÓN</a>
-        <a href="{% url 'listar_historial' %}">📋 VER HISTORIAL COMPLETO</a>
+        {% if user.is_superuser or user.is_staff %}
+            <a href="{% url 'crear_historial' %}" style="padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; margin-right: 10px;">➕ NUEVA VACUNACIÓN</a>
+        {% endif %}
+        <a href="{% url 'listar_historial' %}" style="padding: 10px 20px; background-color: #17a2b8; color: white; text-decoration: none; border-radius: 5px;">📋 VER HISTORIAL COMPLETO</a>
     </div>
 {% endblock %}

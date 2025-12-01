@@ -15,14 +15,18 @@
             {% endif %}
         </div>
     </div>
-            {% if mostrar_futuras %}
+
+    {# Botones de filtro #}
+    <div style="margin-bottom: 15px;">
+        {% if mostrar_futuras %}
             <a href="{% url 'listar_citas' %}" style="padding: 8px 15px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 4px;">VER TODAS LAS CITAS</a>
-            <span >CITAS RECORDATORIO (Activo)</span>
+            <span style="padding: 8px 15px; background-color: #28a745; color: white; border-radius: 4px;">📅 CITAS PENDIENTES (Activo)</span>
         {% else %}
             <a href="{% url 'listar_citas' %}?futuras=1" style="padding: 8px 15px; background-color: #28a745; color: white; text-decoration: none; border-radius: 4px;">📅 VER SOLO CITAS PENDIENTES</a>
-            <span>VER TODAS (Activo)</span>
+            <span style="padding: 8px 15px; background-color: #6c757d; color: white; border-radius: 4px;">VER TODAS (Activo)</span>
         {% endif %}
     </div>
+    
     {# INICIO DE LA TABLA #}
     <table class="table table-bordered mb-0">
 
@@ -82,6 +86,18 @@
                             </span>
                         </td> 
                     {% endif %}
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="{% if user.is_superuser %}8{% elif user.is_staff %}8{% else %}6{% endif %}" class="text-center py-4">
+                        <p class="text-muted mb-0">
+                            {% if mostrar_futuras %}
+                                No hay citas pendientes para mostrar. ✅
+                            {% else %}
+                                No hay citas registradas en el sistema.
+                            {% endif %}
+                        </p>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>

@@ -209,10 +209,13 @@ def crear_vacuna(request):
 # =====================================================================================
 
 def listar_citas(request):
+    from datetime import datetime
     mostrar_futuras = request.GET.get('futuras', None)
     
     if mostrar_futuras:
-        citas = Cita.objects.filter(fecha__gte=date.today()).order_by('fecha')
+        # Usar datetime para comparar con DateTimeField
+        ahora = datetime.now()
+        citas = Cita.objects.filter(fecha__gte=ahora).order_by('fecha')
     else:
         citas = Cita.objects.all().order_by('fecha')
     
