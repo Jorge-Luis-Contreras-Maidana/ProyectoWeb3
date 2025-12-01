@@ -155,8 +155,7 @@ def crear_veterinario(request):
     else:
         form = veterinarioForm()
         return render(request, 'nuevo_veterinario.html', {'form': form})
-    
-
+        
 # ======================================================================
 
 def listar_vacunas(request):
@@ -205,7 +204,6 @@ def crear_vacuna(request):
         form = vacunaForm()
         return render(request, 'nueva_vacuna.html', {'form': form})
     
-
 # =====================================================================================
 
 def listar_citas(request):

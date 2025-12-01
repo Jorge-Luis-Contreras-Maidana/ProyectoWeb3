@@ -12,7 +12,6 @@ class Dueno(models.Model):
 
        return f"{self.nombre} - CI: {self.ci} | Tlf: {self.telefono} | Dir: {self.direccion} | Email: {self.email}"
     
-
     class Meta:
         managed = False
         db_table = 'duenos'
