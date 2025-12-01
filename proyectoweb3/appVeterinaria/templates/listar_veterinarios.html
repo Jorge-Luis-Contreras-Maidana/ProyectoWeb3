@@ -1,33 +1,79 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% comment %} usuario: {{ user.username }} {% endcomment %}
-    <h1>LISTADO VETERINARIOS</h1>
-    <ul>
-        {% for veterinario in veterinarios %}
-            <li>
-                {{ veterinario.id_veterinario }} - {{ veterinario.nombre }} - Matrícula: {{ veterinario.matricula }} - Tlf: {{ veterinario.telefono }}
+    {% comment %} usuario: {{ user.username }} {% endcomment %}
+    <div class="d-flex justify-content-between align-items-center">
+        <h1>LISTADO VETERINARIOS</h1>
+        {% if user.is_superuser or user.is_staff %}
+            {# Admin y Staff pueden crear #}
+            <div>
+                <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                    <a href="{% url 'crear_veterinario' %}">NUEVO REGISTRO</a> 
+                </span>
+            </div>
+        {% endif %}
+    </div>
+    <table class="table table-bordered mb-0">
+        <thead class="bg-dark text-white fw-bold text-uppercase">
+            <tr>
+                <th scope="col" class="text-center py-2 border-end">ID VETERINARIO</th>
+                <th scope="col" class="text-center py-2 border-end">NOMBRE</th>
+                <th scope="col" class="text-center py-2 border-end">MATRÍCULA</th>
+                <th scope="col" class="text-center py-2 border-end">TELÉFONO</th>
                 
                 {% if user.is_superuser %}
-                    {# Admin: Puede ELIMINAR y MODIFICAR #}
-                <a href=" {% url 'eliminar_veterinario' veterinario.id_veterinario %}">ELIMINAR</a> | 
-                <a href="{% url 'actualizar_veterinario' veterinario.id_veterinario %}">MODIFICAR</a> 
-                
+                    {# Admin: 2 columnas para ELIMINAR y MODIFICAR #}
+                    <th scope="col" class="text-center py-2 border-end"></th>
+                    <th scope="col" class="text-center py-2 border-end"></th> 
                 {% elif user.is_staff %}
-                    {# Staff: Solo puede MODIFICAR #}
-                    | <a href="{% url 'actualizar_veterinario' veterinario.id_veterinario %}">MODIFICAR</a> 
-                
+                    {# Staff: 1 columna para MODIFICAR #}
+                    <th scope="col" class="text-center py-2 border-end"></th>
                 {% else %}
-                    {# Usuario Normal: Solo Visualizar. No se muestran enlaces de acción #}
+                    {# Usuario Normal: No se agregan columnas de acción #}
                     
                 {% endif %}
-                            </li>
-        {% endfor %}
-    </ul>
-    
-    {% if user.is_superuser or user.is_staff %}
-        {# Admin y Staff pueden crear #}
-    <a href="{% url 'crear_veterinario' %}">NUEVO VETERINARIO</a>
-    {% endif %}
 
+            </tr>
+        </thead>
+        <tbody>
+            {% for veterinario in veterinarios %}
+                <tr>
+                    <th scope="col" class="text-center py-2 border-end">{{ veterinario.id_veterinario }}</th>
+                    <th scope="col" class="text-center py-2 border-end">{{ veterinario.nombre }}</th>
+                    <th scope="col" class="text-center py-2 border-end">{{ veterinario.matricula }}</th>
+                    <th scope="col" class="text-center py-2 border-end">{{ veterinario.telefono }}</th>
+                    
+                    {% if user.is_superuser %}
+                        {# Admin: Puede ELIMINAR y MODIFICAR #}
+                        <th scope="col" class="text-center py-2 border-end">
+                            <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                                <a href=" {% url 'eliminar_veterinario' veterinario.id_veterinario %}">
+                                    ELIMINAR
+                                </a>
+                            </span>
+                        </th>
+                        <th scope="col" class="text-center py-2">
+                            <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                                <a href="{% url 'actualizar_veterinario' veterinario.id_veterinario %}">
+                                    MODIFICAR
+                                </a>
+                            </span>
+                        </th> 
+                    {% elif user.is_staff %}
+                        {# Staff: Solo puede MODIFICAR #}
+                        <th scope="col" class="text-center py-2">
+                            <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                                <a href="{% url 'actualizar_veterinario' veterinario.id_veterinario %}">
+                                    MODIFICAR
+                                </a>
+                            </span>
+                        </th>
+                    {% else %}
+                        {# Usuario Normal: Solo Visualizar. No se muestran enlaces de acción #}
+                    
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
