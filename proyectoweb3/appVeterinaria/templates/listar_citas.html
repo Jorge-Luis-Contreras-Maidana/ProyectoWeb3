@@ -17,6 +17,7 @@
     
     {# INICIO DE LA TABLA #}
     <table class="table table-bordered mb-0">
+
         <thead class="bg-dark text-white fw-bold text-uppercase">
             <tr>
                 <th scope="col" class="text-center py-2 border-end">ID CITA</th>
@@ -25,19 +26,20 @@
                 <th scope="col" class="text-center py-2 border-end">ESTADO</th>
                 <th scope="col" class="text-center py-2 border-end">MASCOTA</th>
                 <th scope="col" class="text-center py-2 border-end">VETERINARIO</th>
-                
-                {# Celdas vacías para los botones de acción según el rol #}
+
+                {# Celdas de Acción en el Encabezado #}
                 {% if user.is_superuser %}
-                    {# Admin: Dos celdas para ELIMINAR y MODIFICAR #}
-                    <th scope="col" class="text-center py-2 border-end"></th>
-                    <th scope="col" class="text-center py-2 border-end"></th> 
+                    <th scope="col" class="text-center py-2 border-end">ELIMINAR</th>
+                    <th scope="col" class="text-center py-2 border-end">MODIFICAR</th> 
                 {% elif user.is_staff %}
-                    {# Staff: Dos celdas (una vacía y otra para MODIFICAR) #}
+                    {# Staff solo tiene modificar, dejamos una celda vacía para alinear si es necesario, 
+                       o simplemente mostramos la de modificar #}
                     <th scope="col" class="text-center py-2 border-end"></th>
-                    <th scope="col" class="text-center py-2 border-end"></th> 
+                    <th scope="col" class="text-center py-2 border-end">MODIFICAR</th>
                 {% endif %}
             </tr>
         </thead>
+        
         <tbody>
             {% for cita in citas %}
                 <tr>
@@ -50,31 +52,28 @@
                     
                     {# Botones de Acción #}
                     {% if user.is_superuser %}
-                        {# Columna ELIMINAR para Admin #}
+                        {# Admin: ELIMINAR y MODIFICAR #}
                         <td class="text-center py-2 border-end">
                             <span class="p-2 rounded bg-danger-subtle text-dark fw-bold">
                                 <a href="{% url 'eliminar_cita' cita.id_cita %}">ELIMINAR</a>
                             </span>
                         </td>
-                        {# Columna MODIFICAR para Admin #}
                         <td class="text-center py-2">
                             <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
                                 <a href="{% url 'actualizar_cita' cita.id_cita %}">MODIFICAR</a>
                             </span>
                         </td> 
                     {% elif user.is_staff %}
-                        {# Columna ELIMINAR (Vacía) para Staff #}
+                        {# Staff: Columna ELIMINAR (Vacía) y MODIFICAR #}
                         <td class="text-center py-2 border-end">
-                            {# Celda vacía para mantener alineación #}
+                            {# Celda vacía para mantener la alineación si el thead tiene 7 celdas + 2 de acción #}
                         </td>
-                        {# Columna MODIFICAR para Staff #}
                         <td class="text-center py-2">
                             <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
                                 <a href="{% url 'actualizar_cita' cita.id_cita %}">MODIFICAR</a>
                             </span>
                         </td> 
                     {% endif %}
-                    
                 </tr>
             {% endfor %}
         </tbody>

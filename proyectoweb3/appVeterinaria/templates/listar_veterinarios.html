@@ -24,18 +24,18 @@
                 <th scope="col" class="text-center py-2 border-end">MATRÍCULA</th>
                 <th scope="col" class="text-center py-2 border-end">TELÉFONO</th>
                 
-                {# Celdas vacías para los botones de acción según el rol #}
+                {# Celdas de Acción en el Encabezado #}
                 {% if user.is_superuser %}
-                    {# Admin: Dos celdas para ELIMINAR y MODIFICAR #}
-                    <th scope="col" class="text-center py-2 border-end"></th>
-                    <th scope="col" class="text-center py-2 border-end"></th> 
+                    <th scope="col" class="text-center py-2 border-end">ELIMINAR</th>
+                    <th scope="col" class="text-center py-2 border-end">MODIFICAR</th> 
                 {% elif user.is_staff %}
-                    {# Staff: Dos celdas (una vacía y otra para MODIFICAR) #}
+                    {# Staff: 1 Celda de relleno y 1 de acción #}
                     <th scope="col" class="text-center py-2 border-end"></th>
-                    <th scope="col" class="text-center py-2 border-end"></th> 
+                    <th scope="col" class="text-center py-2 border-end">MODIFICAR</th>
                 {% endif %}
             </tr>
         </thead>
+        
         <tbody>
             {% for veterinario in veterinarios %}
                 <tr>
@@ -46,31 +46,28 @@
                     
                     {# Botones de Acción #}
                     {% if user.is_superuser %}
-                        {# Columna ELIMINAR para Admin #}
+                        {# Admin: ELIMINAR y MODIFICAR #}
                         <td class="text-center py-2 border-end">
                             <span class="p-2 rounded bg-danger-subtle text-dark fw-bold">
                                 <a href="{% url 'eliminar_veterinario' veterinario.id_veterinario %}">ELIMINAR</a>
                             </span>
                         </td>
-                        {# Columna MODIFICAR para Admin #}
                         <td class="text-center py-2">
                             <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
                                 <a href="{% url 'actualizar_veterinario' veterinario.id_veterinario %}">MODIFICAR</a>
                             </span>
                         </td> 
                     {% elif user.is_staff %}
-                        {# Columna ELIMINAR (Vacía) para Staff #}
+                        {# Staff: Celda ELIMINAR (Vacía) y MODIFICAR #}
                         <td class="text-center py-2 border-end">
-                            {# Celda vacía para mantener alineación #}
+                            {# Celda vacía de relleno para ELIMINAR #}
                         </td>
-                        {# Columna MODIFICAR para Staff #}
                         <td class="text-center py-2">
                             <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
                                 <a href="{% url 'actualizar_veterinario' veterinario.id_veterinario %}">MODIFICAR</a>
                             </span>
                         </td> 
                     {% endif %}
-                    
                 </tr>
             {% endfor %}
         </tbody>
