@@ -4,37 +4,79 @@
     {% comment %} usuario: {{ user.username }} {% endcomment %}
     <div class="d-flex justify-content-between align-items-center">
         <h1>LISTADO CITAS</h1>
-        <div>
-            <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
-                <a href="{% url 'crear_cita' %}">NUEVO REGISTRO</a> 
-            </span>
-        </div>
+        {% if user.is_superuser or user.is_staff %}
+            {# Admin y Staff pueden crear #}
+            <div>
+                <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                    <a href="{% url 'crear_cita' %}">NUEVO REGISTRO</a> 
+                </span>
+            </div>
+        {% endif %}
     </div>
-    <ul>
-        {% for cita in citas %}
-            <li>
-                {{ cita.id_cita }} - Fecha: {{ cita.fecha }} - Motivo: {{ cita.motivo }} - Estado: {{ cita.estado }} - Mascota: {{ cita.id_mascota.nombre }} - Veterinario: {{ cita.id_veterinario.nombre }}
-
+    <table class="table table-bordered mb-0">
+        <thead class="bg-dark text-white fw-bold text-uppercase">
+            <tr>
+                <th scope="col" class="text-center py-2 border-end">ID CITA</th>
+                <th scope="col" class="text-center py-2 border-end">FECHA</th>
+                <th scope="col" class="text-center py-2 border-end">MOTIVO</th>
+                <th scope="col" class="text-center py-2 border-end">ESTADO</th>
+                <th scope="col" class="text-center py-2 border-end">MASCOTA</th>
+                <th scope="col" class="text-center py-2 border-end">VETERINARIO</th>
                 {% if user.is_superuser %}
-                    {# Admin: Puede ELIMINAR y MODIFICAR #}
-                <a href=" {% url 'eliminar_cita' cita.id_cita %}">ELIMINAR</a> | 
-                <a href="{% url 'actualizar_cita' cita.id_cita %}">MODIFICAR</a> 
-                
+                    <th scope="col" class="text-center py-2 border-end">
+                    </th>
+                    <th scope="col" class="text-center py-2 border-end">
+                    </th>
                 {% elif user.is_staff %}
-                    {# Staff: Solo puede MODIFICAR #}
-                    | <a href="{% url 'actualizar_cita' cita.id_cita %}">MODIFICAR</a> 
+                    <th scope="col" class="text-center py-2 border-end">
+                    </th>
+                {% else %}                    
                 
-                {% else %}
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for cita in citas %}
+                <tr>
+                    <th scope="col" class="text-center py-2 border-end">{{ cita.id_cita }}</th>
+                    <th scope="col" class="text-center py-2 border-end">{{ cita.fecha }}</th>
+                    <th scope="col" class="text-center py-2 border-end">{{ cita.motivo }}</th>
+                    <th scope="col" class="text-center py-2 border-end">{{ cita.estado }}</th>
+                    <th scope="col" class="text-center py-2 border-end">{{ cita.id_mascota.nombre }}</th>
+                    <th scope="col" class="text-center py-2 border-end">{{ cita.id_veterinario.nombre }}</th>
+                    
+                    {% if user.is_superuser %}
+                    {# Admin: Puede ELIMINAR y MODIFICAR #}
+                        <th scope="col" class="text-center py-2 border-end">
+                            <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                                <a href=" {% url 'eliminar_cita' cita.id_cita %}">
+                                    ELIMINAR
+                                </a>
+                            </span>
+                        </th>
+                        <th scope="col" class="text-center py-2">
+                            <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                                <a href="{% url 'actualizar_cita' cita.id_cita %}">
+                                    MODIFICAR
+                                </a>
+                            </span>
+                        </th>
+                    {% elif user.is_staff %}
+                    {# Staff: Solo puede MODIFICAR #}
+                        <th scope="col" class="text-center py-2">
+                            <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                                <a href="{% url 'actualizar_cita' cita.id_cita %}">
+                                    MODIFICAR
+                                </a>
+                            </span>
+                        </th>
+                    {% else %}
                     {# Usuario Normal: Solo Visualizar. No se muestran enlaces de acción #}
                     
-                {% endif %}
-                            </li>
-        {% endfor %}
-    </ul>
-
-    {% if user.is_superuser or user.is_staff %}
-        {# Admin y Staff pueden crear #}
-    <a href="{% url 'crear_cita' %}">NUEVA CITA</a>
-    {% endif %}
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     
 {% endblock %}
