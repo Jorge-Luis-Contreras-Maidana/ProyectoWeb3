@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>📅 CALENDARIO DE VACUNAS</h1>
+    
+    <!-- Botones de filtro -->
+    <div style="margin-bottom: 20px;">
+        {% if mostrar_proximas %}
+            <a href="{% url 'calendario_vacunas' %}" >📋 VER TODAS</a>
+            <span >💉 PRÓXIMAS VACUNAS (Activo)</span>
+        {% else %}
+            <a href="{% url 'calendario_vacunas' %}?proximas=1" >💉 VER SOLO PRÓXIMAS</a>
+            <span >📋 VER TODAS (Activo)</span>
+        {% endif %}
+    </div>
+    
+    {% if vacunas %}
+        <div style="margin-top: 20px;">
+            {% for vacuna in vacunas %}
+                <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 8px; background-color: #f9f9f9;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="flex: 1;">
+                            <h3 style="margin: 0 0 10px 0; color: #333;">
+                                🐾 {{ vacuna.id_mascota.nombre }}
+                                <span style="font-size: 0.8em; color: #666;">({{ vacuna.id_mascota.especie }} - {{ vacuna.id_mascota.raza }})</span>
+                            </h3>
+                            <p style="margin: 5px 0;">
+                                <strong>💉 Vacuna:</strong> {{ vacuna.id_vacuna.nombre_vacuna }} - 
+                                <strong>Dosis:</strong> {{ vacuna.dosis_numero }}/{{ vacuna.id_vacuna.dosis_requeridas }}
+                            </p>
+                            <p style="margin: 5px 0;">
+                                <strong>📅 Última aplicación:</strong> {{ vacuna.fecha_aplicacion }}
+                            </p>
+                            <p style="margin: 5px 0;">
+                                <strong>🗓️ Próxima dosis:</strong> 
+                                <span style="font-weight: bold; color: {% if vacuna.fecha_proxima < today %}#dc3545{% elif vacuna.fecha_proxima <= pronto %}#ffc107{% else %}#28a745{% endif %};">
+                                    {{ vacuna.fecha_proxima }}
+                                    {% if vacuna.fecha_proxima < today %}
+                                        ⚠️ VENCIDA
+                                    {% elif vacuna.fecha_proxima == today %}
+                                        🔔 HOY
+                                    {% endif %}
+                                </span>
+                            </p>
+                            <p style="margin: 5px 0;">
+                                <strong>👨‍⚕️ Veterinario:</strong> {{ vacuna.id_veterinario.nombre }}
+                            </p>
+                            <p style="margin: 5px 0;">
+                                <strong>👤 Dueño:</strong> {{ vacuna.id_mascota.id_dueno.nombre }} - 
+                                📞 {{ vacuna.id_mascota.id_dueno.telefono }}
+                            </p>
+                            {% if vacuna.observaciones %}
+                                <p style="margin: 5px 0;">
+                                    <strong>📝 Observaciones:</strong> {{ vacuna.observaciones }}
+                                </p>
+                            {% endif %}
+                        </div>
+                        <div style="margin-left: 20px;">
+                            <a href="{% url 'actualizar_historial' vacuna.id_vacunacion %}" >
+                                ✏️ MODIFICAR
+                            </a>
+                            <a href="{% url 'eliminar_historial' vacuna.id_vacunacion %}" 
+                            onclick="return confirm('¿Está seguro de eliminar este registro?');">
+                                🗑️ ELIMINAR
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div style="padding: 30px; text-align: center; background-color: #f8f9fa; border-radius: 8px; margin-top: 20px;">
+            <p style="font-size: 1.2em; color: #666;">
+                {% if mostrar_proximas %}
+                    No hay vacunas próximas programadas. ✅
+                {% else %}
+                    No hay registros de vacunación en el sistema.
+                {% endif %}
+            </p>
+        </div>
+    {% endif %}
+    
+    <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #ddd;">
+        <a href="{% url 'crear_historial' %}" >➕ NUEVA VACUNACIÓN</a>
+        <a href="{% url 'listar_historial' %}">📋 VER HISTORIAL COMPLETO</a>
+    </div>
+{% endblock %}

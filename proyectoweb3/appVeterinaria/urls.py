@@ -36,4 +36,6 @@ urlpatterns = [
     path('nuevo_historial/', views.crear_historial, name='crear_historial'),
     path('eliminar_historial/<int:id>/', views.eliminar_historial, name='eliminar_historial'),
     path('actualizar_historial/<int:id>/', views.actualizar_historial, name='actualizar_historial'),
+    # 📅 Calendario de Vacunas
+    path('calendario_vacunas/', views.calendario_vacunas, name='calendario_vacunas'),
 ]

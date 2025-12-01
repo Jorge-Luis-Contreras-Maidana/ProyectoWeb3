@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Dueno, Mascota, Veterinario, Vacuna, Cita, HistorialVacunacion 
 from .forms import duenoForm, mascotaForm, veterinarioForm, vacunaForm, citaForm, historialvacunacionForm
 from django.contrib.auth.decorators import login_required
+from datetime import date
 # Create your views here.
 
 @login_required # Solo usuarios logueados pueden acceder
@@ -208,8 +209,17 @@ def crear_vacuna(request):
 # =====================================================================================
 
 def listar_citas(request):
-    citas = Cita.objects.all()
-    return render(request, 'listar_citas.html', {'citas': citas})
+    mostrar_futuras = request.GET.get('futuras', None)
+    
+    if mostrar_futuras:
+        citas = Cita.objects.filter(fecha__gte=date.today()).order_by('fecha')
+    else:
+        citas = Cita.objects.all().order_by('fecha')
+    
+    return render(request, 'listar_citas.html', {
+        'citas': citas,
+        'mostrar_futuras': mostrar_futuras
+    })
 
 def eliminar_cita(request, id):
     cita = get_object_or_404(Cita, id_cita = id)
@@ -316,3 +326,27 @@ def crear_historial(request):
     
 
 # ======================================================
+def calendario_vacunas(request):
+    from datetime import timedelta
+    # Obtener parámetro para filtrar solo próximas vacunas
+    mostrar_proximas = request.GET.get('proximas', None)
+    
+    if mostrar_proximas:
+        # Filtrar solo vacunas próximas (fecha_proxima >= hoy)
+        vacunas = HistorialVacunacion.objects.filter(
+            fecha_proxima__gte=date.today()
+        ).order_by('fecha_proxima')
+    else:
+        # Mostrar todas las vacunas ordenadas por fecha próxima
+        vacunas = HistorialVacunacion.objects.all().order_by('fecha_proxima')
+    
+    # Calcular fechas para comparación
+    hoy = date.today()
+    pronto = hoy + timedelta(days=7)  # Próximos 7 días
+    
+    return render(request, 'calendario_vacunas.html', {
+        'vacunas': vacunas,
+        'mostrar_proximas': mostrar_proximas,
+        'today': hoy,
+        'pronto': pronto
+    })

@@ -5,6 +5,7 @@
     {# Título y Botón de Creación #}
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1>LISTADO DE CITAS</h1>
+        
         <div>
             {% if user.is_superuser or user.is_staff %}
                 {# Admin y Staff pueden crear #}
@@ -14,7 +15,14 @@
             {% endif %}
         </div>
     </div>
-    
+            {% if mostrar_futuras %}
+            <a href="{% url 'listar_citas' %}" style="padding: 8px 15px; background-color: #6c757d; color: white; text-decoration: none; border-radius: 4px;">VER TODAS LAS CITAS</a>
+            <span >CITAS RECORDATORIO (Activo)</span>
+        {% else %}
+            <a href="{% url 'listar_citas' %}?futuras=1" style="padding: 8px 15px; background-color: #28a745; color: white; text-decoration: none; border-radius: 4px;">📅 VER SOLO CITAS PENDIENTES</a>
+            <span>VER TODAS (Activo)</span>
+        {% endif %}
+    </div>
     {# INICIO DE LA TABLA #}
     <table class="table table-bordered mb-0">
 
