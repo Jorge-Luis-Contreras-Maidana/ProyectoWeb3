@@ -2,7 +2,79 @@
 
 {% block content %}
 
-        <h1>LISTADO DUEÑOS</h1>
+ <div class="d-flex justify-content-between align-items-center">
+  <h1>LISTADO DUEÑOS</h1>
+  <div>
+    {% if user.is_superuser or user.is_staff %}
+      {# Admin y Staff pueden crear #}
+      <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+        <a href="{% url 'crear_dueno' %}">NUEVO REGISTRO</a> 
+      </span>
+    {% endif %}
+  </div>
+</div>
+<table class="table table-bordered mb-0">
+        <thead class="bg-dark text-white fw-bold text-uppercase">
+            <tr>
+                <th scope="col" class="text-center py-2 border-end">ID DUEÑO</th>
+                <th scope="col" class="text-center py-2 border-end">NOMBRE</th>
+                <th scope="col" class="text-center py-2 border-end">CI</th>
+                <th scope="col" class="text-center py-2 border-end">TELÉFONO</th>
+                <th scope="col" class="text-center py-2 border-end">DIRECCIÓN</th>
+                {% if user.is_superuser %}
+                    {# Admin: Puede ELIMINAR y MODIFICAR #}
+                    <th scope="col" class="text-center py-2 border-end"></th>
+                    <th scope="col" class="text-center py-2 border-end"></th> 
+                {% elif user.is_staff %}
+                    {# Staff: Solo puede MODIFICAR #}
+                    <th scope="col" class="text-center py-2 border-end"></th> 
+                {% else %}
+                    {# Usuario Normal: No se muestran enlaces de acción #}
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for dueno in duenos %}
+                <tr>
+                    <th scope="col" class="text-center py-2 border-end">{{ dueno.id_dueno }}</th>
+                    <th scope="col" class="text-center py-2 border-end">{{ dueno.nombre }}</th>
+                    <th scope="col" class="text-center py-2 border-end">{{ dueno.ci }}</th>
+                    <th scope="col" class="text-center py-2 border-end">{{ dueno.telefono }}</th>
+                    <th scope="col" class="text-center py-2 border-end">{{ dueno.direccion }}</th>
+                    {% if user.is_superuser %}
+                    {# Admin: Puede ELIMINAR y MODIFICAR #}
+                        <th scope="col" class="text-center py-2 border-end">
+                            <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                                <a href=" {% url 'eliminar_dueno' dueno.id_dueno %}">
+                                    ELIMINAR
+                                </a>
+                            </span>
+                        </th>
+                        <th scope="col" class="text-center py-2">
+                            <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                                <a href="{% url 'actualizar_dueno' dueno.id_dueno %}">
+                                    MODIFICAR
+                                </a>
+                            </span>
+                        </th> 
+                    {% elif user.is_staff %}
+                    {# Staff: Solo puede MODIFICAR #}
+                        <th scope="col" class="text-center py-2">
+                            <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                                <a href="{% url 'actualizar_dueno' dueno.id_dueno %}">
+                                    MODIFICAR
+                                </a>
+                            </span>
+                        </th> 
+                    {% else %}
+                    {# Usuario Normal: No se muestran enlaces de acción #}
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+=======
+=======
         <ul>
             {% for dueno in duenos %}
                 <li>
@@ -40,51 +112,4 @@
 {% endblock %}
 =======
 =======
-        {% comment %} usuario: {{ user.username }} {% endcomment %}
-        <!--agregando estilos -->
-        <h1>LISTADO DUEÑOS</h1>
-            <div class="row g-0 my-0 bg-dark text-white fw-bold text-uppercase">
-                        <div class="col-sm px-0 py-2 border-end text-center">ID DUEÑO</div>
-                        <div class="col-sm px-0 py-2 border-end text-center">NOMBRE</div>
-                        <div class="col-sm px-0 py-2 border-end text-center">CI</div>
-                        <div class="col-sm px-0 py-2 border-end text-center">TELÉFONO</div>
-                        <div class="col-sm px-0 py-2 border-end text-center">DIRECCIÓN</div>
-                        <div class="col-sm px-0 py-2 border-end text-center"></div>
-                        <div class="col-sm px-0 py-2 text-center"></div>
-            </div>
-            {% for dueno in duenos %}
-                <div class="container">
-                    <div class="row g-0 my-0 ">
-                        <div class="col-sm px-0 py-2 border-3 border-end text-center">
-                            {{ dueno.id_dueno }}
-                        </div>
-                        <div class="col-sm px-0 py-2 border-3 border-end text-center">
-                            {{ dueno.nombre }}
-                        </div>
-                        <div class="col-sm px-0 py-2 border-3 border-end text-center">
-                            {{ dueno.ci }}
-                        </div>
-                        <div class="col-sm px-0 py-2 border-3 border-end text-center">
-                            {{ dueno.telefono }}
-                        </div>
-                        <div class="col-sm px-0 py-2 border-3 border-end text-center">
-                            {{ dueno.direccion }}
-                        </div>
-                        <div class="col-sm px-0 py-2 border-3 border-end text-center">
-                            <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
-                                <a href=" {% url 'eliminar_dueno' dueno.id_dueno %}">ELIMINAR</a>
-                            </span>
-                        </div>
-                        <div class="col-sm px-0 py-2 text-center">
-                            <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
-                                <a href="{% url 'actualizar_dueno' dueno.id_dueno %}">MODIFICAR</a>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        
-        <a href="{% url 'crear_dueno' %}">NUEVO DUENO</a> |
-    
-{% endblock %}
 >>>>>>> ca5f047cd9ebe65240a3c38c5a0db0717cbf1c54
