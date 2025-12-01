@@ -1,18 +1,33 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% comment %} usuario: {{ user.username }} {% endcomment %}
-    <h1>LISTADO VETERINARIOS</h1>
-    <ul>
-        {% for veterinario in veterinarios %}
-            <li>
-                {{ veterinario.id_veterinario }} - {{ veterinario.nombre }} - Matrícula: {{ veterinario.matricula }} - Tlf: {{ veterinario.telefono }}
-                <a href=" {% url 'eliminar_veterinario' veterinario.id_veterinario %}">ELIMINAR</a> | 
-                <a href="{% url 'actualizar_veterinario' veterinario.id_veterinario %}">MODIFICAR</a> 
-            </li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'crear_veterinario' %}">NUEVO VETERINARIO</a> |
-
+    {% comment %} usuario: {{ user.username }} {% endcomment %}
+    <h1>LISTADO VETERINARIOS</h1>
+    <ul>
+        {% for veterinario in veterinarios %}
+            <li>
+                {{ veterinario.id_veterinario }} - {{ veterinario.nombre }} - Matrícula: {{ veterinario.matricula }} - Tlf: {{ veterinario.telefono }}
+                
+                {% if user.is_superuser %}
+                    {# Admin: Puede ELIMINAR y MODIFICAR #}
+                <a href=" {% url 'eliminar_veterinario' veterinario.id_veterinario %}">ELIMINAR</a> | 
+                <a href="{% url 'actualizar_veterinario' veterinario.id_veterinario %}">MODIFICAR</a> 
+                
+                {% elif user.is_staff %}
+                    {# Staff: Solo puede MODIFICAR #}
+                    | <a href="{% url 'actualizar_veterinario' veterinario.id_veterinario %}">MODIFICAR</a> 
+                
+                {% else %}
+                    {# Usuario Normal: Solo Visualizar. No se muestran enlaces de acción #}
+                    
+                {% endif %}
+                            </li>
+        {% endfor %}
+    </ul>
     
+    {% if user.is_superuser or user.is_staff %}
+        {# Admin y Staff pueden crear #}
+    <a href="{% url 'crear_veterinario' %}">NUEVO VETERINARIO</a>
+    {% endif %}
+
 {% endblock %}

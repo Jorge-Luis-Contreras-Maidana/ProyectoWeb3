@@ -1,7 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Dueno, Mascota, Veterinario, Vacuna, Cita, HistorialVacunacion 
 from .forms import duenoForm, mascotaForm, veterinarioForm, vacunaForm, citaForm, historialvacunacionForm
+from django.contrib.auth.decorators import login_required
 # Create your views here.
+
+@login_required # Solo usuarios logueados pueden acceder
+def principal_veterinaria(request):
+    """Muestra la página de inicio/información después del login."""
+    return render(request, 'principal_veterinaria.html', {})
 
 def listar_duenos(request):
     duenos = Dueno.objects.all() # igual al SELECT * FROM Clientes

@@ -1,17 +1,33 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% comment %} usuario: {{ user.username }} {% endcomment %}
-    <h1>LISTADO MASCOTAS</h1>
-    <ul>
-        {% for mascota in mascotas %}
-            <li>
-                {{ mascota.id_mascota }} - {{ mascota.nombre }} - {{ mascota.especie }} - {{ mascota.raza }} - {{ mascota.sexo }} - {{ mascota.fecha_nacimiento }} - Dueño ID: {{ mascota.id_dueno.id_dueno }}
-                <a href=" {% url 'eliminar_mascota' mascota.id_mascota %}">ELIMINAR</a> | 
-                <a href="{% url 'actualizar_mascota' mascota.id_mascota %}">MODIFICAR</a> 
-            </li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'crear_mascota' %}">NUEVA MASCOTA</a> |
+    {% comment %} usuario: {{ user.username }} {% endcomment %}
+    <h1>LISTADO MASCOTAS</h1>
+    <ul>
+        {% for mascota in mascotas %}
+            <li>
+                {{ mascota.id_mascota }} - {{ mascota.nombre }} - {{ mascota.especie }} - {{ mascota.raza }} - {{ mascota.sexo }} - {{ mascota.fecha_nacimiento }} - Dueño ID: {{ mascota.id_dueno.id_dueno }}
+                
+                {% if user.is_superuser %}
+                    {# Admin: Puede ELIMINAR y MODIFICAR #}
+                <a href=" {% url 'eliminar_mascota' mascota.id_mascota %}">ELIMINAR</a> | 
+                <a href="{% url 'actualizar_mascota' mascota.id_mascota %}">MODIFICAR</a> 
+                
+                {% elif user.is_staff %}
+                    {# Staff: Solo puede MODIFICAR #}
+                    | <a href="{% url 'actualizar_mascota' mascota.id_mascota %}">MODIFICAR</a> 
+                
+                {% else %}
+                    {# Usuario Normal: Solo Visualizar. No se muestran enlaces de acción #}
+                    
+                {% endif %}
+                            </li>
+        {% endfor %}
+    </ul>
     
+    {% if user.is_superuser or user.is_staff %}
+        {# Admin y Staff pueden crear #}
+    <a href="{% url 'crear_mascota' %}">NUEVA MASCOTA</a>
+    {% endif %}
+    
 {% endblock %}

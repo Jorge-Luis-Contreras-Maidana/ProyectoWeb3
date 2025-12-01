@@ -1,21 +1,39 @@
 {% extends "base.html" %}
 
 {% block content %}
-<<<<<<< HEAD
+
+        <h1>LISTADO DUEÑOS</h1>
+        <ul>
+            {% for dueno in duenos %}
+                <li>
+                    {{ dueno.id_dueno }} - {{ dueno.nombre }} - {{ dueno.ci }} - {{ dueno.telefono }} - {{ dueno.direccion }} - {{ cliente.email }}
+
+                    {% comment %}
+                        Nivel 1: Admin (Superuser) - Permiso total
+                        Nivel 2: Staff - Permite Modificar, No Eliminar
+                        Nivel 3: Usuario Normal - Solo Visualizar (No se muestran enlaces)
+                    {% endcomment %}
+
+                    {% if user.is_superuser %}
+                        {# Admin: Puede ELIMINAR y MODIFICAR #}
+                    <a href=" {% url 'eliminar_dueno' dueno.id_dueno %}">ELIMINAR</a> | 
+                    <a href="{% url 'actualizar_dueno' dueno.id_dueno %}">MODIFICAR</a> 
+                    
+                    {% elif user.is_staff %}
+                        {# Staff: Solo puede MODIFICAR #}
+                        | <a href="{% url 'actualizar_dueno' dueno.id_dueno %}">MODIFICAR</a> 
+                    
+                    {% else %}
+                        {# Usuario Normal: No se muestran enlaces de acción #}
+                        
+                    {% endif %}
+                                    </li>
+            {% endfor %}
+        </ul>
         
-=======
-        {% comment %} usuario: {{ user.username }} {% endcomment %}
->>>>>>> 716d40a775a9e92884cafec15d4b0b775f4beaef
-        <h1>LISTADO DUEÑOS</h1>
-        <ul>
-            {% for dueno in duenos %}
-                <li>
-                    {{ dueno.id_dueno }} - {{ dueno.nombre }} - {{ dueno.ci }} - {{ dueno.telefono }} - {{ dueno.direccion }} - {{ cliente.email }}
-                    <a href=" {% url 'eliminar_dueno' dueno.id_dueno %}">ELIMINAR</a> | 
-                    <a href="{% url 'actualizar_dueno' dueno.id_dueno %}">MODIFICAR</a> 
-                </li>
-            {% endfor %}
-        </ul>
-        <a href="{% url 'crear_dueno' %}">NUEVO DUENO</a> |
-    
+        {% if user.is_superuser or user.is_staff %}
+            {# Admin y Staff pueden crear #}
+        <a href="{% url 'crear_dueno' %}">NUEVO DUENO</a>
+        {% endif %}
+    
 {% endblock %}

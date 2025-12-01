@@ -8,18 +8,35 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
+    {% block navigation %}
+    
         <nav>
-<<<<<<< HEAD
                     <a href="{% url 'listar_duenos' %}">VER DUENOS</a> |
-=======
->>>>>>> 716d40a775a9e92884cafec15d4b0b775f4beaef
                     <a href="{% url 'listar_mascotas' %}">VER MASCOTAS</a> |
                     <a href="{% url 'listar_veterinarios' %}">VER VETERINARIOS</a> |
                     <a href="{% url 'listar_vacunas' %}">VER VACUNAS</a> |
                     <a href="{% url 'listar_citas' %}">VER CITAS</a> |
                     <a href="{% url 'listar_historial' %}">VER HISTORIAL</a>
+                    <a href="#" onclick="document.getElementById('logout-form').submit();" style="
+                        background: linear-gradient(135deg, #ef4444, #dc2626); /* Fondo Rojo */
+                        color: var(--blanco); 
+                        box-shadow: var(--sombra);
+                        /* Quitamos el margin-top que afectaba al botón */
+                        margin-left: 1rem; 
+                        font-weight: 600; 
+                        padding: 0.5rem 1rem; 
+                        border-radius: 8px;
+                        transition: all 0.3s ease;
+                    ">
+                        CERRAR SESIÓN
+                    </a>
+                    <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: none;">
+                        {% csrf_token %}
+                    </form>
+                    
+                    
         </nav>
-
+    {% endblock navigation %}
     <!-- Contenido principal -->
     <div class="container">
         {% block content %}

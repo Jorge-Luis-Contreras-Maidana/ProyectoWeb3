@@ -55,7 +55,7 @@ ROOT_URLCONF = 'proyectoweb3.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,3 +127,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# URL a la que se redirige después de iniciar sesión con éxito
+LOGIN_REDIRECT_URL = '/principal/' 
+
+# URL a la que se redirige si un usuario no logueado intenta acceder a una vista protegida
+LOGIN_URL = '/login/'

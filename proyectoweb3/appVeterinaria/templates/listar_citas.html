@@ -1,17 +1,33 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% comment %} usuario: {{ user.username }} {% endcomment %}
-    <h1>LISTADO CITAS</h1>
-    <ul>
-        {% for cita in citas %}
-            <li>
-                {{ cita.id_cita }} - Fecha: {{ cita.fecha }} - Motivo: {{ cita.motivo }} - Estado: {{ cita.estado }} - Mascota: {{ cita.id_mascota.nombre }} - Veterinario: {{ cita.id_veterinario.nombre }}
-                <a href=" {% url 'eliminar_cita' cita.id_cita %}">ELIMINAR</a> | 
-                <a href="{% url 'actualizar_cita' cita.id_cita %}">MODIFICAR</a> 
-            </li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'crear_cita' %}">NUEVA CITA</a> |
-    
+    {% comment %} usuario: {{ user.username }} {% endcomment %}
+    <h1>LISTADO CITAS</h1>
+    <ul>
+        {% for cita in citas %}
+            <li>
+                {{ cita.id_cita }} - Fecha: {{ cita.fecha }} - Motivo: {{ cita.motivo }} - Estado: {{ cita.estado }} - Mascota: {{ cita.id_mascota.nombre }} - Veterinario: {{ cita.id_veterinario.nombre }}
+
+                {% if user.is_superuser %}
+                    {# Admin: Puede ELIMINAR y MODIFICAR #}
+                <a href=" {% url 'eliminar_cita' cita.id_cita %}">ELIMINAR</a> | 
+                <a href="{% url 'actualizar_cita' cita.id_cita %}">MODIFICAR</a> 
+                
+                {% elif user.is_staff %}
+                    {# Staff: Solo puede MODIFICAR #}
+                    | <a href="{% url 'actualizar_cita' cita.id_cita %}">MODIFICAR</a> 
+                
+                {% else %}
+                    {# Usuario Normal: Solo Visualizar. No se muestran enlaces de acción #}
+                    
+                {% endif %}
+                            </li>
+        {% endfor %}
+    </ul>
+
+    {% if user.is_superuser or user.is_staff %}
+        {# Admin y Staff pueden crear #}
+    <a href="{% url 'crear_cita' %}">NUEVA CITA</a>
+    {% endif %}
+    
 {% endblock %}

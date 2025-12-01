@@ -1,18 +1,33 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% comment %} usuario: {{ user.username }} {% endcomment %}
-    <h1>LISTADO VACUNAS</h1>
-    <ul>
-        {% for vacuna in vacunas %}
-            <li>
-                {{ vacuna.id_vacuna }} - {{ vacuna.nombre_vacuna }} - Dosis Requeridas: {{ vacuna.dosis_requeridas }} - Intervalo (días): {{ vacuna.intervalo_dias }} - Descripción: {{ vacuna.descripcion }}
-                <a href=" {% url 'eliminar_vacuna' vacuna.id_vacuna %}">ELIMINAR</a> | 
-                <a href="{% url 'actualizar_vacuna' vacuna.id_vacuna %}">MODIFICAR</a> 
-            </li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'crear_vacuna' %}">NUEVA VACUNA</a> |
-
+    {% comment %} usuario: {{ user.username }} {% endcomment %}
+    <h1>LISTADO VACUNAS</h1>
+    <ul>
+        {% for vacuna in vacunas %}
+            <li>
+                {{ vacuna.id_vacuna }} - {{ vacuna.nombre_vacuna }} - Dosis Requeridas: {{ vacuna.dosis_requeridas }} - Intervalo (días): {{ vacuna.intervalo_dias }} - Descripción: {{ vacuna.descripcion }}
+                
+                {% if user.is_superuser %}
+                    {# Admin: Puede ELIMINAR y MODIFICAR #}
+                <a href=" {% url 'eliminar_vacuna' vacuna.id_vacuna %}">ELIMINAR</a> | 
+                <a href="{% url 'actualizar_vacuna' vacuna.id_vacuna %}">MODIFICAR</a> 
+                
+                {% elif user.is_staff %}
+                    {# Staff: Solo puede MODIFICAR #}
+                    | <a href="{% url 'actualizar_vacuna' vacuna.id_vacuna %}">MODIFICAR</a> 
+                
+                {% else %}
+                    {# Usuario Normal: Solo Visualizar. No se muestran enlaces de acción #}
+                    
+                {% endif %}
+                            </li>
+        {% endfor %}
+    </ul>
     
+    {% if user.is_superuser or user.is_staff %}
+        {# Admin y Staff pueden crear #}
+    <a href="{% url 'crear_vacuna' %}">NUEVA VACUNA</a>
+    {% endif %}
+    
 {% endblock %}
