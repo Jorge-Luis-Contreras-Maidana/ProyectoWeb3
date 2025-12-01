@@ -1,33 +1,85 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% comment %} usuario: {{ user.username }} {% endcomment %}
-    <h1>LISTADO MASCOTAS</h1>
-    <ul>
-        {% for mascota in mascotas %}
-            <li>
-                {{ mascota.id_mascota }} - {{ mascota.nombre }} - {{ mascota.especie }} - {{ mascota.raza }} - {{ mascota.sexo }} - {{ mascota.fecha_nacimiento }} - Dueño ID: {{ mascota.id_dueno.id_dueno }}
-                
-                {% if user.is_superuser %}
-                    {# Admin: Puede ELIMINAR y MODIFICAR #}
-                <a href=" {% url 'eliminar_mascota' mascota.id_mascota %}">ELIMINAR</a> | 
-                <a href="{% url 'actualizar_mascota' mascota.id_mascota %}">MODIFICAR</a> 
-                
-                {% elif user.is_staff %}
-                    {# Staff: Solo puede MODIFICAR #}
-                    | <a href="{% url 'actualizar_mascota' mascota.id_mascota %}">MODIFICAR</a> 
-                
-                {% else %}
-                    {# Usuario Normal: Solo Visualizar. No se muestran enlaces de acción #}
-                    
-                {% endif %}
-                            </li>
-        {% endfor %}
-    </ul>
+
+    {# Título y Botón de Creación #}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>LISTADO DE MASCOTAS</h1>
+        <div>
+            {% if user.is_superuser or user.is_staff %}
+                {# Admin y Staff pueden crear #}
+                <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                    <a href="{% url 'crear_mascota' %}">NUEVA MASCOTA</a> 
+                </span>
+            {% endif %}
+        </div>
+    </div>
     
-    {% if user.is_superuser or user.is_staff %}
-        {# Admin y Staff pueden crear #}
-    <a href="{% url 'crear_mascota' %}">NUEVA MASCOTA</a>
-    {% endif %}
-    
+    {# INICIO DE LA TABLA #}
+    <table class="table table-bordered mb-0">
+        <thead class="bg-dark text-white fw-bold text-uppercase">
+            <tr>
+                <th scope="col" class="text-center py-2 border-end">ID</th>
+                <th scope="col" class="text-center py-2 border-end">NOMBRE</th>
+                <th scope="col" class="text-center py-2 border-end">ESPECIE</th>
+                <th scope="col" class="text-center py-2 border-end">RAZA</th>
+                <th scope="col" class="text-center py-2 border-end">SEXO</th>
+                <th scope="col" class="text-center py-2 border-end">F. NACIMIENTO</th>
+                <th scope="col" class="text-center py-2 border-end">ID DUEÑO</th>
+                
+                {# Celdas vacías para los botones de acción según el rol #}
+                {% if user.is_superuser %}
+                    {# Admin: Dos celdas para ELIMINAR y MODIFICAR #}
+                    <th scope="col" class="text-center py-2 border-end"></th>
+                    <th scope="col" class="text-center py-2 border-end"></th> 
+                {% elif user.is_staff %}
+                    {# Staff: Dos celdas (una vacía y otra para MODIFICAR) #}
+                    <th scope="col" class="text-center py-2 border-end"></th>
+                    <th scope="col" class="text-center py-2 border-end"></th> 
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for mascota in mascotas %}
+                <tr>
+                    <td class="text-center py-2 border-end">{{ mascota.id_mascota }}</td>
+                    <td class="text-center py-2 border-end">{{ mascota.nombre }}</td>
+                    <td class="text-center py-2 border-end">{{ mascota.especie }}</td>
+                    <td class="text-center py-2 border-end">{{ mascota.raza }}</td>
+                    <td class="text-center py-2 border-end">{{ mascota.sexo }}</td>
+                    <td class="text-center py-2 border-end">{{ mascota.fecha_nacimiento }}</td>
+                    <td class="text-center py-2 border-end">{{ mascota.id_dueno.id_dueno }}</td>
+                    
+                    {# Botones de Acción #}
+                    {% if user.is_superuser %}
+                        {# Columna ELIMINAR para Admin #}
+                        <td class="text-center py-2 border-end">
+                            <span class="p-2 rounded bg-danger-subtle text-dark fw-bold">
+                                <a href="{% url 'eliminar_mascota' mascota.id_mascota %}">ELIMINAR</a>
+                            </span>
+                        </td>
+                        {# Columna MODIFICAR para Admin #}
+                        <td class="text-center py-2">
+                            <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                                <a href="{% url 'actualizar_mascota' mascota.id_mascota %}">MODIFICAR</a>
+                            </span>
+                        </td> 
+                    {% elif user.is_staff %}
+                        {# Columna ELIMINAR (Vacía) para Staff #}
+                        <td class="text-center py-2 border-end">
+                            {# Celda vacía para mantener alineación #}
+                        </td>
+                        {# Columna MODIFICAR para Staff #}
+                        <td class="text-center py-2">
+                            <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                                <a href="{% url 'actualizar_mascota' mascota.id_mascota %}">MODIFICAR</a>
+                            </span>
+                        </td> 
+                    {% endif %}
+                    
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
 {% endblock %}

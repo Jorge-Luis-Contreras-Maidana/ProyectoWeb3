@@ -1,38 +1,85 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% comment %} usuario: {{ user.username }} {% endcomment %}
-    <h1>HISTORIAL DE VACUNACIÓN</h1>
-    <ul>
-        {% for historial in historiales %}
-            <li>
-                {{ historial.id_vacunacion }} - Mascota: {{ historial.id_mascota.nombre }} - Vacuna: {{ historial.id_vacuna.nombre_vacuna }} (Dosis {{ historial.dosis_numero }}) - Aplicación: {{ historial.fecha_aplicacion }} - Próxima Dosis: {{ historial.fecha_proxima }} - Veterinario: {{ historial.id_veterinario.nombre }}
 
+    {# Título y Botón de Creación #}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>HISTORIAL DE VACUNACIÓN</h1>
+        <div>
+            {% if user.is_superuser or user.is_staff %}
+                {# Admin y Staff pueden crear #}
+                <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                    <a href="{% url 'crear_historial' %}">NUEVO REGISTRO</a> 
+                </span>
+            {% endif %}
+        </div>
+    </div>
+    
+    {# INICIO DE LA TABLA #}
+    <table class="table table-bordered mb-0">
+        <thead class="bg-dark text-white fw-bold text-uppercase">
+            <tr>
+                <th scope="col" class="text-center py-2 border-end">ID HISTORIAL</th>
+                <th scope="col" class="text-center py-2 border-end">MASCOTA</th>
+                <th scope="col" class="text-center py-2 border-end">VACUNA</th>
+                <th scope="col" class="text-center py-2 border-end">DOSIS</th>
+                <th scope="col" class="text-center py-2 border-end">APLICACION</th>
+                <th scope="col" class="text-center py-2 border-end">PRÓXIMA DOSIS</th>
+                <th scope="col" class="text-center py-2 border-end">VETERINARIO</th>
+                
+                {# Celdas vacías para los botones de acción según el rol #}
                 {% if user.is_superuser %}
-                    {# Admin: Puede ELIMINAR y MODIFICAR #}
-                <a href=" {% url 'eliminar_historial' historial.id_vacunacion %}">ELIMINAR</a> | 
-                <a href="{% url 'actualizar_historial' historial.id_vacunacion %}">MODIFICAR</a> 
-                
+                    {# Admin: Dos celdas para ELIMINAR y MODIFICAR #}
+                    <th scope="col" class="text-center py-2 border-end"></th>
+                    <th scope="col" class="text-center py-2 border-end"></th> 
                 {% elif user.is_staff %}
-                    {# Staff: Solo puede MODIFICAR #}
-                    | <a href="{% url 'actualizar_historial' historial.id_vacunacion %}">MODIFICAR</a> 
-                
-                {% else %}
-                    {# Usuario Normal: Solo Visualizar. No se muestran enlaces de acción #}
-                    
+                    {# Staff: Una celda para MODIFICAR (y una vacía para mantener la alineación) #}
+                    <th scope="col" class="text-center py-2 border-end"></th> 
+                    <th scope="col" class="text-center py-2 border-end"></th> 
                 {% endif %}
-                            </li>
-        {% endfor %}
-    </ul>
+            </tr>
+        </thead>
+        <tbody>
+            {% for historial in historiales %}
+                <tr>
+                    <td class="text-center py-2 border-end">{{ historial.id_vacunacion }}</td>
+                    <td class="text-center py-2 border-end">{{ historial.id_mascota.nombre }}</td>
+                    <td class="text-center py-2 border-end">{{ historial.id_vacuna.nombre_vacuna }}</td>
+                    <td class="text-center py-2 border-end">{{ historial.dosis_numero }}</td>
+                    <td class="text-center py-2 border-end">{{ historial.fecha_aplicacion }}</td>
+                    <td class="text-center py-2 border-end">{{ historial.fecha_proxima }}</td>
+                    <td class="text-center py-2 border-end">{{ historial.id_veterinario.nombre }}</td>
+                    
+                    {# Botones de Acción #}
+                    {% if user.is_superuser %}
+                        {# Columna ELIMINAR para Admin #}
+                        <td class="text-center py-2 border-end">
+                            <span class="p-2 rounded bg-danger-subtle text-dark fw-bold">
+                                <a href="{% url 'eliminar_historial' historial.id_vacunacion %}">ELIMINAR</a>
+                            </span>
+                        </td>
+                        {# Columna MODIFICAR para Admin #}
+                        <td class="text-center py-2">
+                            <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                                <a href="{% url 'actualizar_historial' historial.id_vacunacion %}">MODIFICAR</a>
+                            </span>
+                        </td> 
+                    {% elif user.is_staff %}
+                        {# Columna ELIMINAR (Vacía) para Staff #}
+                        <td class="text-center py-2 border-end">
+                            {# Celda vacía para mantener alineación #}
+                        </td>
+                        {# Columna MODIFICAR para Staff #}
+                        <td class="text-center py-2">
+                            <span class="p-2 rounded bg-info-subtle text-dark fw-bold">
+                                <a href="{% url 'actualizar_historial' historial.id_vacunacion %}">MODIFICAR</a>
+                            </span>
+                        </td> 
+                    {% endif %}
+                    
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-    {% if user.is_superuser or user.is_staff %}
-        {# Admin y Staff pueden crear #}
-    <a href="{% url 'crear_historial' %}">NUEVO REGISTRO</a>
-    {% endif %}
-
-    {% comment %} <a href="{% url 'listar_compras' %}">VER COMPRAS</a> |
-    <a href="{% url 'listar_tiendas' %}">VER TIENDAS</a> {% endcomment %}
-    {% comment %} {% else %}
-    <h2>Ud no tiene permiso para app Ventas</h2>
-    {% endif %} {% endcomment %}
 {% endblock %}
