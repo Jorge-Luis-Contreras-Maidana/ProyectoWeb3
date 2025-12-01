@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from appVeterinaria import views
 
+
 urlpatterns = [
     path('duenos/', views.listar_duenos, name='listar_duenos'),
     path('eliminar_dueno/<int:id>/', views.eliminar_dueno, name='eliminar_dueno'),
